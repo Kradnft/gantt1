@@ -36,6 +36,7 @@ public class GUI implements ActionListener{
     JButton btIniciar, btProcesoAleatorio;
     DefaultTableModel modelTbInfo, modelTbGant;
     JScrollPane spTablaInfo;
+    int personaActual;
     
     String[] nombres = {"Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del Moral", "Sebastiana Lin"};
     
@@ -150,74 +151,122 @@ public class GUI implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btIniciar) {
             System.out.println("Boton iniciar");
+            
+            //Se genera un numero aleatorio
             Random aleatorio = new Random(System.currentTimeMillis()); 
             aleatorio.setSeed(System.currentTimeMillis());
-
-            boolean disponible = true;
+            
+            //Se inicializa el tiempo en cero
             int tiempo = 0;
+            
+            //Se crea una cola de clientes
             Cola clientes = new Cola();
+            
+            //Se le asigna una rafaga y un nombre aleatorio al primer cliente
             int rafaga = aleatorio.nextInt(8) + 3;
             int pNombre = aleatorio.nextInt(9);
             
+            //Se inserta el primer cliente a la cola
             clientes.insert(tiempo, rafaga, nombres[pNombre]);
-            
-            while (clientes.longitud()!=0 && tiempo<30){
-            aleatorio.setSeed(System.currentTimeMillis());
-                try {
-                    Thread.sleep(2000); //Pausara 2 segundos
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            clientes.Cabecera.comienzo=tiempo;
-            Node personaActual = clientes.Cabecera;
-            System.out.println("Cliente que sera atendido:"+personaActual.nombre );
-            System.out.println("Numero de rafaga:"+personaActual.rafaga);
-            int auxiliar =personaActual.rafaga;
-            while (auxiliar>0){
-                try {
-                    Thread.sleep(2000); //Pausara 2 segundos
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println("Estamos en el "+tiempo);
-                System.out.println("Se esta atendiendo a "+personaActual.nombre);
-                tiempo++;
-                auxiliar--;
-                int x = aleatorio.nextInt(6);
-                if (x==4){
-                    System.out.println("///////");
-                    System.out.println("Llego un nuevo cliente");
-                    int prafa = aleatorio.nextInt(4)+2;
-                    int pombre = aleatorio.nextInt(9);
-                    System.out.println("Rafagas: "+prafa+" nombre: "+nombres[pombre] );
-                    clientes.insert(tiempo-1, prafa, nombres[pombre]);
-                    System.out.println("///////////");
+          
+            //Mientras que haya clientes y el tiempo sea menor a 30
+            while (clientes.longitud() != 0) {
+                //Se generan los objetos de las tablas de info. y gantt para el cliente actual
+                Object[] dataAuxInfo = new Object[7];
+                Object[] dataGantt = new Object[30];
+                
+                //Se genera una nueva semilla aleatoria
+                aleatorio.setSeed(System.currentTimeMillis());
+                
+                //Se guarda el tiempo de comienzo en el tiempo actual
+                clientes.Cabecera.comienzo = tiempo;
+                
+                //Se setea la persona actual como la cabeza de la cola
+                Node personaActual = clientes.Cabecera;
+                
+                //Se muestra que cliente será atendido y se suben sus primeros datos a la tabla de informacion
+                System.out.println("Cliente que sera atendido:" + personaActual.nombre);
+                dataAuxInfo[0] = personaActual.nombre;
+                dataAuxInfo[1] = tiempo;
+                dataAuxInfo[2] = personaActual.rafaga;
+                dataAuxInfo[3] = personaActual.comienzo;               
+                System.out.println("Numero de rafaga:" + personaActual.rafaga);
+                
+                
+                //Se itera sobre el cliente actual hasta terminar su rafaga
+                while (tiempo < personaActual.llegada + personaActual.rafaga) {
+                    
+                    //Se muestra la informacion
+                    System.out.println("");
+                    System.out.println("Estamos en el tiempo: " + tiempo);
+                    System.out.println("Se esta atendiendo a " + personaActual.nombre);
+                    
+                    //En el tiempo actual se llena  esa unidad en el modelo de gantt
+                    dataGantt[tiempo] = tiempo;
+                    
+                    //Llegada de un nuevo cliente de manera aleatoria en cada unidad de tiempo
+                    int x = aleatorio.nextInt(2);
+                    System.out.println("");
+                    System.out.println("¿Llega un nuevo cliente?: (0 = No, 1 = Si) " + x);
+                    System.out.println("");
+                    if (x == 1) {
+                        //Cabecera del mensaje
+                        System.out.println("///////");
+                        System.out.println("Llego un nuevo cliente");
+                        
+                        //Se le asigna una rafaga y un nombre aleatorio
+                        int nuevoClientRagafa = aleatorio.nextInt(4) + 2;
+                        int nuevoClientNombre = aleatorio.nextInt(9);
+                        
+                        //Se muestra la informacion del nuevo cliente
+                        System.out.println("Nombre del nuevo cliente: " + nombres[nuevoClientNombre]);
+                        System.out.println("Rafaga del nuevo cliente: " + nuevoClientRagafa);
+                        
+                        //Se inserta el nuevo cliente en la cola
+                        clientes.insert(aleatorio.nextInt(30), nuevoClientRagafa, nombres[nuevoClientNombre]);
+                        System.out.println("///////////");
+                        System.out.println("");
+                    }
+                    
+                    //Se aumenta el tiempo
+                    tiempo++;
+                    
+                    System.out.println("Impresion de los clientes: " + clientes.imprimir());
                 }
                 
-            }
-            System.out.println("------------------------");
-            System.out.println("Resumen de: " + personaActual.nombre);
-            System.out.println("Llegada en: " + personaActual.llegada);
-            System.out.println("Rafaga de: "+ personaActual.rafaga);
-            System.out.println("Comenzo a las: " + personaActual.comienzo);
-            personaActual.fin=personaActual.rafaga+personaActual.comienzo;
-            System.out.println("Tiempo final: "+ personaActual.fin);
-            personaActual.retorno=personaActual.fin-personaActual.llegada;
-            System.out.println("Tiempo de retorno: "+ personaActual.retorno);
-            personaActual.espera= personaActual.retorno-personaActual.rafaga;
-            System.out.println("Salio en: " + tiempo);
-            System.out.println("------------------------");
-            System.out.println("(Pausa incomoda para leer el resumen)");
-                try {
+                personaActual.fin = tiempo;
+                personaActual.retorno = personaActual.fin - personaActual.llegada;
+                personaActual.espera = personaActual.retorno - personaActual.rafaga;
+                
+                dataAuxInfo[4] = personaActual.fin;
+                dataAuxInfo[5] = personaActual.retorno;
+                dataAuxInfo[6] = personaActual.espera;
+                
+                modelTbInfo.addRow(dataAuxInfo);
+                modelTbGant.addRow(dataGantt);
+                
+                System.out.println("------------------------");
+                System.out.println("Resumen de: " + personaActual.nombre);
+                System.out.println("Llegada en: " + personaActual.llegada);
+                System.out.println("Rafaga de: " + personaActual.rafaga);
+                System.out.println("Comenzo a las: " + personaActual.comienzo);
+                personaActual.fin = personaActual.rafaga + personaActual.comienzo;
+                System.out.println("Tiempo final: " + personaActual.fin);
+                personaActual.retorno = personaActual.fin - personaActual.llegada;
+                System.out.println("Tiempo de retorno: " + personaActual.retorno);
+                personaActual.espera = personaActual.retorno - personaActual.rafaga;
+                System.out.println("Salio en: " + tiempo);
+                System.out.println("------------------------");
+                System.out.println("(Pausa incomoda para leer el resumen)");
+                /*try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            clientes.extraer(1);
-            
-            
-        }
-            
+                }*/
+                clientes.extraer(1);
+
+            }
+
         }
     }
     

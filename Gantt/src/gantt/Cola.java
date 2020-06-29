@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class Cola {
 
     protected Node Cabecera;
-    ArrayList<String> ClientesArr;
     
     public Cola() {
         Cabecera = null;
@@ -47,10 +46,6 @@ public class Cola {
 
     }
 
-    //Metodo para obtener longitud (6 lineas de código)
-    /*Generamos un contador y un nodo temporal que ira recorriendo la cola
-          hasta encontrar el final, mientra va recorriendo va sumando al contador
-     */
     public int longitud() {
         int cont = 0;
         Node tmp = Cabecera;
@@ -63,12 +58,12 @@ public class Cola {
 
     public String imprimir() {
         String clientes = "";
-        ClientesArr = new ArrayList();
+        
         if (!isEmpty()) {
             Node tmp = Cabecera;
             while (tmp != null) {
-                clientes = clientes + "CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + "." + "\n";
-                ClientesArr.add("CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + ".");
+                
+                
                 tmp = tmp.getNext();
             }
         }
