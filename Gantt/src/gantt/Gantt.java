@@ -16,7 +16,7 @@ public class Gantt {
     /**
      * @param args the command line arguments
      */
-    static String[] nombres = {"Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del Moral", "Sebastiana Lin"};
+    static String[] nombres = {"Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del Moral", "Sebastiana Lin","Maria Olmos", "Karina Megias", "Gerardo Cordero", "Oliva da Silva", "Angela-Maria Zapata", "Rosendo Narvaez", "Celia Heras", "Mónica Llopis"};
     
     public static void main(String[] args) throws InterruptedException {
         // TODO code application logic here
