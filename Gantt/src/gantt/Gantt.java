@@ -33,7 +33,7 @@ public class Gantt {
         
         while (clientes.longitud()!=0 && tiempo<30){
             alea.setSeed(System.currentTimeMillis());
-        
+
             Thread.sleep(2000); //Pausara 2 segundos
             clientes.Cabecera.comienzo=tiempo;
             Node personaActual = clientes.Cabecera;
