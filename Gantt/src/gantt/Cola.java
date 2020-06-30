@@ -14,22 +14,38 @@ import java.util.ArrayList;
  */
 public class Cola {
 
-    protected Node Cabecera;
+    public Node Cabecera;
 
     public Cola() {
         Cabecera = null;
     }
 
-    public void insert(int llegada, int rafaga, String nom) {
+    /*public void insert(int llegada, int rafaga, String nom) {
 
         Node tmp = new Node(llegada, rafaga, nom);
 
         tmp.setNext(Cabecera);
 
         Cabecera = tmp;
+    }*/
+    
+    public void insert(int llegada, int rafaga, String nom) {
+        Node tmp = new Node(llegada, rafaga, nom);
+        int l = longitud();
+        if (l > 0) {
+        Node aux1 = Cabecera;
+        while (aux1.next!=null){
+            aux1=aux1.next;
+        }
+        aux1.setNext(tmp);
+    }
+        else {
+            Cabecera = tmp;
+        }
+    
     }
 
-    public void extraer(int x) {
+    /*public void extraer(int x) {
         while (x > 0) {
             int l = longitud();
             if (l > 1) {
@@ -40,6 +56,17 @@ public class Cola {
                 aux.setNext(null);
             } else {
                 Cabecera = null;
+            }
+            x--;
+        }
+
+    }*/
+    
+    public void extraer(int x) {
+        while (x > 0) {
+            int l = longitud();
+            if (l > 1) {
+                Cabecera=Cabecera.next;
             }
             x--;
         }

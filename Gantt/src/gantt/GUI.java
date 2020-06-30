@@ -36,7 +36,7 @@ public class GUI implements ActionListener {
     JButton btIniciar, btProcesoAleatorio;
     DefaultTableModel modelTbInfo, modelTbGant;
     JScrollPane spTablaInfo;
-
+    int uio = 1;
     String[] nombres = {"Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del Moral", "Sebastiana Lin"};
 
     public JPanel Titulo() {
@@ -163,13 +163,19 @@ public class GUI implements ActionListener {
 
             //Se le asigna una rafaga y un nombre aleatorio al primer cliente
             int rafaga = aleatorio.nextInt(8) + 3;
-            int pNombre = aleatorio.nextInt(nombres.length-1);
+            int pNombre = aleatorio.nextInt(nombres.length - 1);
 
             //Se inserta el primer cliente a la cola
             clientes.insert(tiempo, rafaga, nombres[pNombre]);
 
             //Mientras que haya clientes y el tiempo sea menor a 30
-            while (clientes.longitud() != 0) {
+            while (clientes.longitud() != 0 && tiempo <= 30) {
+
+                try {
+                    Thread.sleep(0000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 //Se generan los objetos de las tablas de info. y gantt para el cliente actual
                 Object[] dataAuxInfo = new Object[7];
                 Object[] dataGantt = new Object[30];
@@ -186,20 +192,26 @@ public class GUI implements ActionListener {
                 //Se muestra que cliente será atendido y se suben sus primeros datos a la tabla de informacion
                 System.out.println("Cliente que sera atendido:" + personaActual.getNombre());
                 dataAuxInfo[0] = personaActual.getNombre();
-                dataAuxInfo[1] = tiempo;
+                dataAuxInfo[1] = personaActual.getLlegada();
                 dataAuxInfo[2] = personaActual.getRafaga();
                 dataAuxInfo[3] = personaActual.getComienzo();
                 System.out.println("Numero de rafaga:" + personaActual.getRafaga());
                 //Se itera sobre el cliente actual hasta terminar su rafaga
                 System.out.println(personaActual.getLlegada() + personaActual.getRafaga() + "AQUI GONORREA1" + tiempo);
-                while ((personaActual.getLlegada() + personaActual.getRafaga()) > tiempo) {
-                    
+                while (tiempo < (personaActual.getComienzo() + personaActual.getRafaga())) {
+                    try {
+                        Thread.sleep(0000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                     System.out.println(personaActual.getLlegada() + personaActual.getRafaga() + "AQUI GONORREA2" + tiempo);
 
                     //Se muestra la informacion
                     System.out.println("");
                     System.out.println("Estamos en el tiempo: " + tiempo);
                     System.out.println("Se esta atendiendo a " + personaActual.getNombre());
+                    System.out.println("xxxxxx");
 
                     //En el tiempo actual se llena  esa unidad en el modelo de gantt
                     dataGantt[tiempo] = tiempo;
@@ -221,20 +233,22 @@ public class GUI implements ActionListener {
                         //Se muestra la informacion del nuevo cliente
                         System.out.println("Nombre del nuevo cliente: " + nombres[nuevoClientNombre]);
                         System.out.println("Rafaga del nuevo cliente: " + nuevoClientRagafa);
-
                         //Se inserta el nuevo cliente en la cola
-                        clientes.insert(aleatorio.nextInt(30), nuevoClientRagafa, nombres[nuevoClientNombre]);
+                        System.out.println("Sin problemas");
+                        clientes.insert(tiempo, nuevoClientRagafa, nombres[nuevoClientNombre]);
+                        uio++;
+                        System.out.println("i: " + uio);
                         System.out.println("///////////");
                         System.out.println("");
                     }
 
                     //Se aumenta el tiempo
                     tiempo++;
-                    System.out.println("NECESItO TIEMPO: " + tiempo);
+                    System.out.println("NECESITO TIEMPO: " + tiempo);
                     System.out.println("Impresion de los clientes: " + clientes.imprimir());
                 }
-                
-                personaActual.setFin(tiempo);
+
+                personaActual.setFin(personaActual.getRafaga() + personaActual.getComienzo());
                 personaActual.setRetorno(personaActual.getFin() - personaActual.getLlegada());
                 personaActual.setEspera(personaActual.getRetorno() - personaActual.getRafaga());
 
@@ -250,19 +264,19 @@ public class GUI implements ActionListener {
                 System.out.println("Llegada en: " + personaActual.getLlegada());
                 System.out.println("Rafaga de: " + personaActual.getRafaga());
                 System.out.println("Comenzo a las: " + personaActual.getComienzo());
-                //personaActual.setFin(personaActual.getRafaga() + personaActual.getComienzo());
+                personaActual.setFin(personaActual.getRafaga() + personaActual.getComienzo());
                 System.out.println("Tiempo final: " + personaActual.fin);
-                //personaActual.setRetorno(personaActual.getFin() - personaActual.getLlegada());
+                personaActual.setRetorno(personaActual.getFin() - personaActual.getLlegada());
                 System.out.println("Tiempo de retorno: " + personaActual.getRetorno());
-                //personaActual.setEspera(personaActual.getRetorno() - personaActual.getRafaga());
+                personaActual.setEspera(personaActual.getRetorno() - personaActual.getRafaga());
                 System.out.println("Salio en: " + tiempo);
                 System.out.println("------------------------");
                 System.out.println("(Pausa incomoda para leer el resumen)");
-                /*try {
-                    Thread.sleep(10000);
+                try {
+                    Thread.sleep(0000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
+                }
                 clientes.extraer(1);
 
             }

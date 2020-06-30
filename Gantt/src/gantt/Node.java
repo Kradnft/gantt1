@@ -11,12 +11,12 @@ package gantt;
  */
 public class Node {
 
-    public int rafaga = 0;
-    public int llegada = 0;
-    public int comienzo = 0;
-    public int fin = 0;
-    public int retorno = 0;
-    public int espera = 0;
+    public int rafaga;
+    public int llegada;
+    public int comienzo;
+    public int fin;
+    public int retorno;
+    public int espera;
     public String nombre;
     public Node next;
 
