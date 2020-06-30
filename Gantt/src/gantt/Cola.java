@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Cola {
 
     protected Node Cabecera;
-    
+
     public Cola() {
         Cabecera = null;
     }
@@ -58,16 +58,15 @@ public class Cola {
 
     public String imprimir() {
         String clientes = "";
-        
+
         if (!isEmpty()) {
             Node tmp = Cabecera;
             while (tmp != null) {
-                
-                
+
                 tmp = tmp.getNext();
             }
         }
-        
+
         return clientes;
     }
 
